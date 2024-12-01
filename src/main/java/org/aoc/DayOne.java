@@ -26,9 +26,7 @@ public class DayOne {
 
     int dif = 0;
     for (int j = 0; j < leftPart.size(); j++) {
-      Integer l = leftPart.get(j);
-      Integer r = rightPart.get(j);
-      dif += Math.abs(l - r);
+      dif += Math.abs(leftPart.get(j) - rightPart.get(j));
     }
     return dif;
   }
