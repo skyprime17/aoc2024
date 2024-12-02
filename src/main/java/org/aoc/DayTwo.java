@@ -21,11 +21,17 @@ public class DayTwo {
       if (i + 1 == report.size()) {
         break;
       }
-      ReportResult cmp = cmp(report.get(i), report.get(i + 1), decreasing);
-      if (!cmp.correct()) {
+      Integer a = report.get(i);
+      Integer b = report.get(i + 1);
+      int absDiff = Math.abs(a - b);
+      if (absDiff < 1 || absDiff > 3) {
         return false;
       }
-      decreasing = cmp.decreasing();
+      boolean localDecrease = a - b < 0;
+      if (decreasing != null && decreasing != localDecrease) {
+        return false;
+      }
+      decreasing = localDecrease;
     }
     return true;
   }
@@ -44,23 +50,6 @@ public class DayTwo {
     }
 
     return false;
-  }
-
-
-  private record ReportResult(boolean correct, Boolean decreasing) {}
-
-  private static ReportResult cmp(Integer a, Integer b, Boolean globalDecrease) {
-    int absDiff = Math.abs(a - b);
-    if (absDiff < 1 || absDiff > 3) {
-      return new ReportResult(false, null);
-    }
-    boolean localDecrease = a - b < 0;
-
-    if (globalDecrease != null && globalDecrease != localDecrease) {
-      return new ReportResult(false, null);
-    }
-
-    return new ReportResult(true, localDecrease);
   }
 
   public static void main(String[] args) {
