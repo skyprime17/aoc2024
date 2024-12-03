@@ -2,21 +2,17 @@ package org.aoc;
 
 import java.util.Iterator;
 import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import util.DataLoader;
 
 public class DayThree {
 
   private static int solvePartOne(String lines) {
-    Pattern MUL = Pattern.compile("mul\\(([0-9]{1,3}),([0-9]{1,3})\\)");
-    int res = 0;
-    Matcher matcher = MUL.matcher(lines);
-    while (matcher.find()) {
-      res += Integer.parseInt(matcher.group(1)) * Integer.parseInt(matcher.group(2));
-    }
-    return res;
+    return Pattern.compile("mul\\(([0-9]{1,3}),([0-9]{1,3})\\)")
+        .matcher(lines)
+        .results()
+        .map(x -> Integer.parseInt(x.group(1)) * Integer.parseInt(x.group(2)))
+        .reduce(0, Integer::sum);
   }
 
   private static int solvePartTwo(String lines) {
