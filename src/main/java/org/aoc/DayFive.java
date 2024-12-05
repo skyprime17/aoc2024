@@ -80,6 +80,35 @@ public class DayFive {
     return update;
   }
 
+
+  private static int solvePartTwo2(Map<String, List<String>> rules, List<List<String>> updates) {
+    int sum = 0;
+    for (List<String> u : updates) {
+      if (!isCorrect(rules, u)) {
+        List<String> fix = fixSmart(rules, u);
+        int i = Integer.parseInt(fix.get(fix.size() / 2));
+        sum += i;
+      }
+    }
+    return sum;
+  }
+
+  private static List<String> fixSmart(Map<String, List<String>> rules, List<String> updates) {
+    return updates.stream().sorted((a, b) -> {
+      // check if a has b in its right side
+      List<String> right = rules.getOrDefault(a, List.of());
+      if (right.contains(b)) {
+        return -1;
+      }
+      // check if b has a in its left side
+      List<String> left = rules.entrySet().stream().filter(e -> e.getValue().contains(b)).map(Map.Entry::getKey).toList();
+      if (left.contains(a)) {
+        return 1;
+      }
+      return 0;
+    }).toList();
+  }
+
   public static void main(String[] args) {
     DataLoader dataLoader = new DataLoader();
     List<String> input = dataLoader.getInput("day5");
@@ -99,5 +128,9 @@ public class DayFive {
     var timeNow = System.currentTimeMillis();
     System.out.println(solvePartTwo(rules, updates));
     System.out.println(System.currentTimeMillis() - timeNow);
+
+    var timeNow2 = System.currentTimeMillis();
+    System.out.println(solvePartTwo2(rules, updates));
+    System.out.println(System.currentTimeMillis() - timeNow2);
   }
 }
