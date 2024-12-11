@@ -41,43 +41,29 @@ public class DayEleven {
     return size;
   }
 
-  private record Stones(Long left, Long right) {}
-
   private static long countStoneBlinks(long stone, int depth, Map<String, Long> cache) {
+    if (depth == 0) {
+      return 1;
+    }
     String cacheKey = stone + ":" + depth;
     if (cache.containsKey(cacheKey)) {
       return cache.get(cacheKey);
     }
 
-    var result = calcStone(stone);
-    if (depth == 1) {
-      if (result.right == null) {
-        return 1;
-      }
-      return 2;
+    long output = 0;
+    String n = stone + "";
+    if (stone == 0) {
+      output = countStoneBlinks(1, depth - 1, cache);
+    } else if (n.length() % 2 == 0) {
+      String[] parts = {n.substring(0, n.length() / 2), n.substring(n.length() / 2)};
+      output += countStoneBlinks(Long.parseLong(parts[0]), depth - 1, cache);
+      output += countStoneBlinks(Long.parseLong(parts[1]), depth - 1, cache);
+    } else {
+      output = countStoneBlinks(stone * 2024, depth - 1, cache);
     }
-    var left = countStoneBlinks(result.left, depth - 1, cache);
-    var right = 0L;
-    if (result.right != null) {
-      right = countStoneBlinks(result.right, depth - 1, cache);
-    }
-    var output = left + right;
+
     cache.put(cacheKey, output);
     return output;
-  }
-
-  private static Stones calcStone(long stone) {
-    if (stone == 0) {
-      return new Stones(1L, null);
-    }
-
-    String n = stone + "";
-    if (n.length() % 2 == 0) {
-      String[] parts = {n.substring(0, n.length() / 2), n.substring(n.length() / 2)};
-      return new Stones(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
-    }
-
-    return new Stones(stone * 2024, null);
   }
 
   public static void main(String[] args) {
